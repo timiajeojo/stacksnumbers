@@ -3,7 +3,7 @@ import "./globals.css";
 import ThemeInit from "./components/ThemeInit";
 
 export const metadata: Metadata = {
-  title: "stacksnumber — numbers on demand for verification",
+  title: "stacksnumbers — numbers on demand for verification",
   description:
     "Buy a real, working phone line for the minute it takes to receive an SMS code. No contract, no SIM card, no number tied to your name.",
 };
