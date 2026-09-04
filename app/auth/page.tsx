@@ -126,7 +126,7 @@ function AuthForm() {
           <span className="logo-mark">
             <MessageSquareCode size={15} strokeWidth={2.5} />
           </span>
-          stacksnumber
+          stacksnumbers
         </div>
 
         <div className="brand-copy">
