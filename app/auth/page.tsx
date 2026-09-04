@@ -280,7 +280,7 @@ function AuthForm() {
               </button>
 
               <div className="switch-line" style={{ marginTop: "24px" }}>
-                New to stacksnumber?{" "}
+                New to stacksnumbers?{" "}
                 <a
                   onClick={(e) => {
                     e.preventDefault();
