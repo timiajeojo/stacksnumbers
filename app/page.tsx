@@ -279,7 +279,7 @@ export default function Home() {
               <div className="logo" style={{ marginBottom: "14px" }}>
                 <span className="logo-mark">
                 <MessageSquareCode size={15} strokeWidth={2.5} />
-                </span>stacksnumber
+                </span>stacksnumbers
               </div>
               <p style={{ fontSize: "13.5px", color: "var(--paper-dim)", maxWidth: "220px" }}>
                 Real numbers, one verification at a time.

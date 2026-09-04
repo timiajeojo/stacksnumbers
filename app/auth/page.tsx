@@ -126,7 +126,7 @@ function AuthForm() {
           <span className="logo-mark">
             <MessageSquareCode size={15} strokeWidth={2.5} />
           </span>
-          stacksnumber
+          stacksnumbers
         </div>
 
         <div className="brand-copy">
@@ -280,7 +280,7 @@ function AuthForm() {
               </button>
 
               <div className="switch-line" style={{ marginTop: "24px" }}>
-                New to stacksnumber?{" "}
+                New to stacksnumbers?{" "}
                 <a
                   onClick={(e) => {
                     e.preventDefault();
@@ -395,7 +395,7 @@ function AuthForm() {
           )}
 
           <div className="terms">
-            By continuing you agree to stacksnumber&apos;s{" "}
+            By continuing you agree to stacksnumbers&apos;s{" "}
             <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
           </div>
         </div>
