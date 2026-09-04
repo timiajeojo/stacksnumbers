@@ -110,7 +110,7 @@ export default function DashboardPage() {
             <span className="logo-mark">
               <MessageSquareCode size={12} strokeWidth={2.5} />
             </span>
-            stacksnumber
+            stacksnumbers
           </div>
           <div className="icon-btn">{(name || "T").charAt(0).toUpperCase()}</div>
         </div>

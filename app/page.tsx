@@ -29,7 +29,7 @@ export default function Home() {
           <div className="logo">
             <span className="logo-mark">
             <MessageSquareCode size={15} strokeWidth={2.5} />
-            </span>stacksnumber
+            </span>stacksnumbers
           </div>
           <nav className="links">
             <a href="#coverage">Coverage</a>
@@ -221,7 +221,7 @@ export default function Home() {
           <div className="quote-grid">
             <div className="quote-card reveal reveal-up">
               <p>
-                &quot;stacksnumber&apos;s eSIM activation saved me during my
+                &quot;stacksnumbers&apos;s eSIM activation saved me during my
                 international travels. I could verify accounts without
                 worrying about SIM cards!&quot;
               </p>
@@ -256,7 +256,7 @@ export default function Home() {
             >
               <p>
                 &quot;My carrier charged a fortune for roaming just to
-                receive one text. Now I just grab a number on stacksnumber
+                receive one text. Now I just grab a number on stacksnumbers
                 and verify in seconds.&quot;
               </p>
               <div className="quote-who">
@@ -312,7 +312,7 @@ export default function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <span>© 2026 stacksnumber. All lines routed responsibly.</span>
+            <span>© 2026 stacksnumbers. All lines routed responsibly.</span>
             <span className="mono">status: all systems live</span>
           </div>
         </div>
