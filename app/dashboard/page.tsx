@@ -25,7 +25,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid, active: true },
   { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
-  { label: "Rentals", href: "/dashboard/rentals", icon: Package },
+  { label: "Rentals", href: "#", icon: Package },
 ];
 
 function formatNaira(amount: number): string {
@@ -180,7 +180,7 @@ export default function DashboardPage() {
                 updates on available numbers.
               </p>
                 <a
-                  href="https://chat.whatsapp.com/INnT4qESqbGClIdJmaYYHR?s=cl&p=a&mlu=0"
+                  href="https://chat.whatsapp.com/E9SIS7FjeGA8C2u2f2kbcE?s=cl&p=a&mlu=4"
                    target="_blank"
                    rel="noopener noreferrer"
                     className="telegram-btn"

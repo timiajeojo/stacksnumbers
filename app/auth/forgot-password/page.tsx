@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
         <span className="logo-mark">
           <MessageSquareCode size={15} strokeWidth={2.5} />
         </span>
-        <span>stacksnumber</span>
+        <span>stacksnumbers</span>
       </div>
 
       <div className="fp-card">

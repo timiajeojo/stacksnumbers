@@ -29,7 +29,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
-  { label: "Rentals", href: "/dashboard/rentals", icon: Package, active: true },
+  { label: "Rentals", href: "#", icon: Package, active: true },
 ];
 
 type RentalStatus = "pending" | "active" | "expired" | "cancelled";
@@ -159,7 +159,7 @@ export default function RentalsPage() {
           <div className="logo-mark">
             <MessageSquareCode size={16} strokeWidth={2.5} />
           </div>
-          <span>stacksnumber</span>
+          <span>stacksnumbers</span>
         </div>
 
         <div className="drawer-label">NAVIGATION</div>
@@ -191,7 +191,7 @@ export default function RentalsPage() {
             <span className="logo-mark">
               <MessageSquareCode size={12} strokeWidth={2.5} />
             </span>
-            stacksnumber
+            stacksnumbers
           </div>
           <div className="icon-btn">T</div>
         </div>

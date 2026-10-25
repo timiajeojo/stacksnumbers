@@ -22,7 +22,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
-  { label: "Rentals", href: "/dashboard/rentals", icon: Package },
+  { label: "Rentals", href: "#", icon: Package },
 ];
 
 type Country = { id: number; name: string; code: string; region: string };

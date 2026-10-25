@@ -33,7 +33,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2, active: true },
-  { label: "Rentals", href: "/dashboard/rentals", icon: Package },
+  { label: "Rentals", href: "#", icon: Package },
 ];
 
 type RentalStatus = "waiting" | "received" | "expired" | "refunded";
@@ -202,7 +202,7 @@ export default function VerificationsPage() {
           <div className="logo-mark">
             <MessageSquareCode size={16} strokeWidth={2.5} />
           </div>
-          <span>stacksnumber</span>
+          <span>stacksnumbers</span>
         </div>
 
         <div className="drawer-label">NAVIGATION</div>
@@ -234,7 +234,7 @@ export default function VerificationsPage() {
             <span className="logo-mark">
               <MessageSquareCode size={12} strokeWidth={2.5} />
             </span>
-            stacksnumber
+            stacksnumbers
           </div>
           <div className="icon-btn">T</div>
         </div>
@@ -368,7 +368,7 @@ export default function VerificationsPage() {
                 and quick updates on available numbers.
               </p>
               <a
-                 href="https://chat.whatsapp.com/INnT4qESqbGClIdJmaYYHR?s=cl&p=a&mlu=0"
+                 href="https://chat.whatsapp.com/E9SIS7FjeGA8C2u2f2kbcE?s=cl&p=a&mlu=4"
                   target="_blank"
                   rel="noopener noreferrer"
                    className="telegram-btn"
