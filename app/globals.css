@@ -880,3 +880,102 @@ html[data-theme='light']{
 .fp-card .field{text-align:left; margin-bottom:22px;}
 .fp-return{margin-top:20px; font-size:13.5px; color:var(--paper-dim);}
 .fp-return a{color:var(--blue); text-decoration:underline;}
+
+
+/* ==========================================================================
+   DASHBOARD RESPONSIVE LAYOUT
+   Base styles above are the phone layout (single 460px column, slide-in
+   drawer). Everything below only adds behaviour for larger screens, plus a
+   small-phone tweak, so the mobile layout is unchanged.
+   ========================================================================== */
+
+/* Safety nets for every screen size */
+.dashboard-app{width:100%;}
+.pagination{flex-wrap:wrap;}
+.rc-number, .tx-type, .wallet-amount, .bh-amount{overflow-wrap:anywhere;}
+
+/* --- Small phones (<= 380px): a little less padding ---------------------- */
+@media (max-width:380px){
+  .topbar{padding-left:14px; padding-right:14px;}
+  .page-head{padding-left:14px; padding-right:14px;}
+  .dashboard-main{padding-left:14px; padding-right:14px;}
+  .page-head h1{font-size:22px;}
+  .flow-box{padding:18px 16px;}
+  .rc-number{font-size:15px;}
+}
+
+/* --- Large phones / small tablets (>= 640px) ----------------------------- */
+@media (min-width:640px){
+  .dashboard-app{max-width:760px;}
+  .topbar{padding:22px 32px 6px;}
+  .page-head{padding:22px 32px 4px;}
+  .page-head h1{font-size:30px;}
+  .dashboard-main{padding:20px 32px 0;}
+
+  .qa-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .country-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+
+  /* Filters sit side by side instead of stacked */
+  .filter-row{flex-direction:row;}
+  .filter-row .filter-wrap{flex:1; min-width:0;}
+
+  /* Settings tabs become a horizontal tab bar */
+  .settings-nav{flex-direction:row; gap:6px; flex-wrap:wrap;}
+  .settings-nav-item{padding:11px 18px;}
+
+  /* Forms don't need the full width */
+  .flow-box{max-width:560px; margin-left:auto; margin-right:auto;}
+  .settings-card, .danger-box{max-width:560px;}
+  .community-card{max-width:640px;}
+
+  /* Top-up sheet becomes a centred dialog */
+  .topup-modal{
+    top:50%; bottom:auto; left:50%; right:auto;
+    width:min(440px, 92vw); max-width:none; margin:0;
+    border-radius:20px; padding:28px 26px 28px;
+    opacity:0; pointer-events:none;
+    transform:translate(-50%, -46%);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .topup-modal.open{opacity:1; pointer-events:auto; transform:translate(-50%, -50%);}
+}
+
+/* --- Laptops and desktops (>= 1024px): permanent sidebar ----------------- */
+@media (min-width:1024px){
+  /* Drawer becomes a fixed sidebar that is always visible */
+  .drawer{
+    transform:none; width:260px; max-width:none; z-index:50;
+    transition:none; padding:26px 18px;
+  }
+  .dashboard-backdrop{display:none;}
+
+  /* No hamburger or duplicate logo needed once the sidebar is showing */
+  .topbar > button.icon-btn{display:none;}
+  .topbar .logo{display:none;}
+  .topbar{justify-content:flex-end;}
+
+  /* Page content sits to the right of the sidebar */
+  .dashboard-app{max-width:none; margin:0 0 0 260px; padding-bottom:64px;}
+  .topbar, .page-head, .dashboard-main{
+    max-width:1120px; margin-left:auto; margin-right:auto;
+    padding-left:40px; padding-right:40px;
+  }
+  .page-head h1{font-size:32px;}
+
+  /* Lists use two columns so wide screens aren't one long strip */
+  .rental-list, .tx-list{
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px;
+    align-items:start;
+  }
+  .rental-list > div:only-child:not(.rental-card),
+  .tx-list > div:only-child:not(.tx-card),
+  .tx-list > .pagination{grid-column:1 / -1;}
+
+  .wallet-card, .balance-hero{max-width:720px;}
+}
+
+/* --- Wide desktops (>= 1440px) ------------------------------------------- */
+@media (min-width:1440px){
+  .topbar, .page-head, .dashboard-main{max-width:1240px;}
+  .rental-list{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
