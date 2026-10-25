@@ -266,7 +266,7 @@ export default function BuyNumberPage() {
             <span className="logo-mark">
               <MessageSquareCode size={12} strokeWidth={2.5} />
             </span>
-            stacksnumber
+            stacksnumbers
           </div>
           <div className="icon-btn">T</div>
         </div>
