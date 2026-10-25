@@ -239,7 +239,7 @@ export default function BuyNumberPage() {
           <div className="logo-mark">
             <MessageSquareCode size={16} strokeWidth={2.5} />
           </div>
-          <span>stacksnumber</span>
+          <span>stacksnumbers</span>
         </div>
 
         <div className="drawer-label">NAVIGATION</div>
