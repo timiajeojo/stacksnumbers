@@ -17,6 +17,8 @@ import {
   MessageSquareCode,
 } from "lucide-react";
 import DrawerUser from "../../components/DrawerUser";
+import WhatsAppNotice from "../../components/WhatsAppNotice";
+import { isBlockedService } from "../../lib/blockedServices";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
@@ -275,6 +277,7 @@ export default function BuyNumberPage() {
         </div>
 
         <main className="dashboard-main">
+          <WhatsAppNotice />
           <div className="flow-box">
             <div className="flow-head">
               <a href="/dashboard" className="back-btn">
@@ -398,21 +401,28 @@ export default function BuyNumberPage() {
                     {filteredServices.length === 0 ? (
                       <div className="select-dropdown-empty">No services found</div>
                     ) : (
-                      filteredServices.map((s) => (
-                        <div
-                          key={s.id}
-                          className={`select-dropdown-item ${
-                            service === String(s.id) ? "selected" : ""
-                          }`}
-                          onClick={() => {
-                            setService(String(s.id));
-                            setServiceOpen(false);
-                            setServiceSearch("");
-                          }}
-                        >
-                          {s.name}
-                        </div>
-                      ))
+                      filteredServices.map((s) => {
+                        const blocked = isBlockedService(s.name);
+                        return (
+                          <div
+                            key={s.id}
+                            className={`select-dropdown-item ${
+                              service === String(s.id) ? "selected" : ""
+                            }`}
+                            style={blocked ? { opacity: 0.45, cursor: "not-allowed" } : undefined}
+                            aria-disabled={blocked}
+                            onClick={() => {
+                              if (blocked) return;
+                              setService(String(s.id));
+                              setServiceOpen(false);
+                              setServiceSearch("");
+                            }}
+                          >
+                            {s.name}
+                            {blocked && " — temporarily unavailable"}
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </div>

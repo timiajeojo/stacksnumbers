@@ -36,6 +36,7 @@ import {
   limit,
 } from "firebase/firestore";
 import { auth, db } from "../../lib/firebase";
+import WhatsAppNotice from "../../components/WhatsAppNotice";
 
 declare global {
   interface Window {
@@ -288,6 +289,7 @@ export default function DepositsPage() {
         </div>
 
         <main className="dashboard-main">
+          <WhatsAppNotice />
           <div className="balance-hero">
             <div className="bh-top">
               <span className="lbl">Current Balance</span>
