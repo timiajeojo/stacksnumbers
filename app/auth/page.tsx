@@ -303,7 +303,7 @@ function AuthForm() {
                 <label>FULL NAME</label>
                 <input
                   type="text"
-                  placeholder="Oluwatimilehin Adebayo"
+                  placeholder="Timzy Stacks"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required

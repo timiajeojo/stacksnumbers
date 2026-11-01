@@ -199,13 +199,14 @@ export default function DepositsPage() {
       callback: (response: { reference: string }) => {
         (async () => {
           try {
+            const token = await user.getIdToken();
             const res = await fetch("/api/paystack/verify", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                reference: response.reference,
-                uid: user.uid,
-              }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ reference: response.reference }),
             });
             if (!res.ok) throw new Error("Verification failed");
             setModalOpen(false);
@@ -213,7 +214,7 @@ export default function DepositsPage() {
             // onSnapshot listeners once Firestore is credited.
           } catch {
             setPayError(
-              "Payment received but verification failed — contact support with your reference: " +
+              "Payment received. If your balance doesn't update within a few minutes, contact support with your reference: " +
                 response.reference
             );
           } finally {
