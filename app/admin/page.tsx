@@ -19,6 +19,7 @@ type Stats = {
   quick: { users: number; purchases: number; transactions: number };
   topups: { id: string; t: number; amount: number; fee: number; note: string }[];
   walletTotal: number;
+  pendingHeld: number;
   estimatedFees: number;
 };
 
@@ -144,14 +145,14 @@ export default function AdminPage() {
   const cards: { t: string; v: number | null; c?: number | null; i: string; tone: string; note?: string }[] = [
     { t: "Total Customer Deposits", v: p.totalDeposits, c: c.totalDeposits, i: "💳", tone: "blue" },
     { t: "Used Deposits (Customer Purchases)", v: p.used, c: c.used, i: "🛒", tone: "green" },
-    { t: "Unused Customer Deposits", v: stats.unused, i: "👛", tone: "amber", note: "Held in customer wallets now" },
+    { t: "Unused Customer Deposits", v: stats.unused, i: "👛", tone: "amber", note: stats.pendingHeld > 0 ? `Includes ${n(stats.pendingHeld)} in pending orders` : "Not yet spent by customers" },
     { t: "SMSPool Replenishment Reserve", v: p.reserve, c: c.reserve, i: "🛡️", tone: "violet" },
     { t: "Total SMSPool Funding", v: p.funding, c: c.funding, i: "📊", tone: "teal" },
     { t: "Gross Profit", v: p.gross, c: c.gross, i: "📈", tone: "green" },
     { t: "Net Profit", v: p.net, c: c.net, i: "💰", tone: "violet" },
     { t: "Current SMSPool Balance", v: stats.balanceNgn, i: "💬", tone: "indigo", note: stats.balanceUsd != null ? `$${stats.balanceUsd.toFixed(2)} live from SMSPool` : "Couldn’t reach SMSPool" },
   ];
-  const mismatch = Math.abs(stats.walletTotal - stats.unused) > 1;
+  const mismatch = Math.abs(stats.walletTotal - (stats.unused - stats.pendingHeld)) > 1;
   const nav = ["Transactions", "Users", "Purchases", "SMSPool", "Settings", "Reports"];
 
   return (

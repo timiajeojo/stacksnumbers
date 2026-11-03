@@ -61,12 +61,15 @@ export async function GET(req: NextRequest) {
       });
     });
 
-    // Refunded orders are left out: the customer got their money back.
+    // Only successful orders (code received) count as used / cost / profit.
+    // Refunded orders are out, and "waiting" ones aren't counted until they succeed.
     const orders: Ord[] = [];
+    let pendingHeld = 0; // paid for, but SMSPool hasn't delivered the code yet
     orderSnap.forEach((d) => {
       const x = d.data();
-      if (x.status === "refunded") return;
       const price = Number(x.costNaira) || 0;
+      if (x.status === "waiting") pendingHeld += price;
+      if (x.status !== "received") return;
       orders.push({
         t: ms(x.purchasedAt),
         price,
@@ -164,6 +167,7 @@ export async function GET(req: NextRequest) {
       topups: topups.slice(0, 6),
       // Sanity check: unused deposits should equal what customers hold in wallets
       walletTotal: r2(walletTotal),
+      pendingHeld: r2(pendingHeld),
       estimatedFees: deposits.filter((x) => x.est).length,
     });
   } catch (err) {
