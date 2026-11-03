@@ -3,7 +3,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "../../../lib/firebaseAdmin";
 import { verifyRequestUser } from "../../../lib/verifyAuth";
 import { smspoolFetch } from "../../../lib/smspool";
-import { usdToNgn } from "../../../lib/pricing";
+import { usdToNgn, usdToNgnCost } from "../../../lib/pricing";
 
 // One-time verification number purchase (what the Buy Number page calls).
 // Body: { country: "<id>", service: "<id>" }
@@ -44,6 +44,8 @@ export async function POST(req: NextRequest) {
   // 1. Price it
   let pool: string;
   let costNaira: number;
+  let usdPrice: number; // what SMSPool charges us (USD)
+  let smspoolCostNgn: number; // the same cost in naira, for the admin dashboard
   try {
     const { ok, data } = await smspoolFetch("/request/pricing", {
       country,
@@ -59,7 +61,7 @@ export async function POST(req: NextRequest) {
     const cheapest = (data as RawPricing[]).reduce((min, p) =>
       Number(p.price) < Number(min.price) ? p : min
     );
-    const usdPrice = Number(cheapest.price);
+    usdPrice = Number(cheapest.price);
     if (!Number.isFinite(usdPrice) || usdPrice <= 0) {
       return NextResponse.json(
         { error: "Couldn't price this number. Please try again." },
@@ -68,6 +70,7 @@ export async function POST(req: NextRequest) {
     }
     pool = String(cheapest.pool);
     costNaira = Math.ceil(usdToNgn(usdPrice));
+    smspoolCostNgn = Math.round(usdToNgnCost(usdPrice) * 100) / 100;
   } catch (err) {
     console.error("SMSPool purchase pricing error:", err);
     return NextResponse.json(
@@ -175,6 +178,8 @@ export async function POST(req: NextRequest) {
       otpsReceived: 0,
       lastCode: null,
       costNaira, // used to refund the wallet if SMSPool later refunds the order
+      smspoolCostUsd: usdPrice,
+      smspoolCostNgn,
       expiresAt,
       purchasedAt: FieldValue.serverTimestamp(),
     });
@@ -183,6 +188,8 @@ export async function POST(req: NextRequest) {
       status: "ok",
       method: `Number rental - ${serviceName}`,
       amount: costNaira,
+      smspoolCostUsd: usdPrice,
+      smspoolCostNgn,
       orderId,
       completed: true,
       createdAt: FieldValue.serverTimestamp(),

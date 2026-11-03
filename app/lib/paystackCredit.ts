@@ -56,6 +56,11 @@ export async function creditPaystackPayment(
     return { ok: false, status: 400, error: "Invalid payment amount" };
   }
 
+  // Paystack's own fee on this payment (also in kobo). Saved so the admin
+  // dashboard can subtract it when working out net profit.
+  const rawFee = Number(data.fees) / 100;
+  const paystackFee = Number.isFinite(rawFee) && rawFee >= 0 ? rawFee : 0;
+
   // 2. Work out whose payment it is from the email Paystack recorded. The
   //    deposits page always pays with the signed-in user's own email.
   const email = String(data.customer?.email || "").trim().toLowerCase();
@@ -97,6 +102,7 @@ export async function creditPaystackPayment(
     t.set(claimRef, {
       uid,
       amount,
+      paystackFee,
       email,
       claimedAt: FieldValue.serverTimestamp(),
     });
@@ -105,6 +111,7 @@ export async function creditPaystackPayment(
       status: "ok",
       method: "Paystack",
       amount,
+      paystackFee,
       reference,
       completed: true,
       createdAt: FieldValue.serverTimestamp(),
