@@ -3,13 +3,13 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "../../../lib/firebaseAdmin";
 import { requireAdmin } from "../../../lib/requireAdmin";
 import { smspoolFetch } from "../../../lib/smspool";
-import { usdToNgnCost } from "../../../lib/pricing";
+import { usdToNgnCost, MARKUP_MULTIPLIER } from "../../../lib/pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const DAY = 86400000;
-const MARKUP = 1.7; // same as lib/pricing.ts; only used to estimate the cost of older orders
+const MARKUP = MARKUP_MULTIPLIER; // from lib/pricing.ts; only used to estimate the cost of orders saved before we stored the real cost
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const sum = <T>(a: T[], f: (x: T) => number) => a.reduce((s, x) => s + f(x), 0);
 const ms = (v: any): number => (v?.toMillis ? v.toMillis() : typeof v === "number" ? v : 0);
