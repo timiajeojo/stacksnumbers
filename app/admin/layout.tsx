@@ -14,7 +14,7 @@ const NAV = [
   { href: "/admin/transactions", label: "Transactions", icon: "⇄" },
   { href: "/admin/users", label: "Users", icon: "◔" },
   { href: "/admin/purchases", label: "Purchases", icon: "🛒" },
-  { href: "/admin/smspool", label: "SMSPool", icon: "◈", soon: true },
+  { href: "/admin/smspool", label: "SMSPool", icon: "◈" },
   { href: "/admin/settings", label: "Settings", icon: "⚙", soon: true },
   { href: "/admin/reports", label: "Reports", icon: "▤", soon: true },
 ];
