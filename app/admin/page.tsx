@@ -1,10 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../lib/firebase"; // ← your client-side Firebase file; change the path/name if yours differs
-import "./admin.css";
 
 type Pt = { d: string; deposits: number; purchases: number; profit: number };
 type Stats = {
@@ -77,11 +74,9 @@ function Donut({ used, unused }: { used: number; unused: number }) {
 }
 
 export default function AdminPage() {
-  const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
   const [err, setErr] = useState<"forbidden" | "error" | null>(null);
   const [days, setDays] = useState("30");
-  const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ amount: "", fee: "", note: "" });
   const [busy, setBusy] = useState(false);
   const [formErr, setFormErr] = useState("");
@@ -104,14 +99,9 @@ export default function AdminPage() {
     }
   }, []);
 
-  useEffect(
-    () =>
-      onAuthStateChanged(auth, (u) => {
-        if (!u) router.replace("/auth");
-        else load(days);
-      }),
-    [days, load, router]
-  );
+  useEffect(() => {
+    load(days);
+  }, [days, load]);
 
   async function addTopup() {
     const u = auth.currentUser;
@@ -136,10 +126,10 @@ export default function AdminPage() {
   }
 
   if (err === "forbidden")
-    return <div className="adm adm-center"><div><h1>No admin access</h1><p>Your account isn’t an admin. Set <b>isAdmin</b> to true on your user document in Firestore, then reload.</p></div></div>;
+    return <div className="adm-center"><div><h1>No admin access</h1><p>Your account isn’t an admin. Set <b>isAdmin</b> to true on your user document in Firestore, then reload.</p></div></div>;
   if (err === "error" && !stats)
-    return <div className="adm adm-center"><div><h1>Couldn’t load the dashboard</h1><p>Check the Vercel logs for /api/admin/stats, then reload.</p></div></div>;
-  if (!stats) return <div className="adm adm-center">Loading dashboard…</div>;
+    return <div className="adm-center"><div><h1>Couldn’t load the dashboard</h1><p>Check the Vercel logs for /api/admin/stats, then reload.</p></div></div>;
+  if (!stats) return <div className="adm-center">Loading dashboard…</div>;
 
   const p = stats.period, c = stats.change;
   const cards: { t: string; v: number | null; c?: number | null; i: string; tone: string; note?: string }[] = [
@@ -153,23 +143,9 @@ export default function AdminPage() {
     { t: "Current SMSPool Balance", v: stats.balanceNgn, i: "💬", tone: "indigo", note: stats.balanceUsd != null ? `$${stats.balanceUsd.toFixed(2)} live from SMSPool` : "Couldn’t reach SMSPool" },
   ];
   const mismatch = Math.abs(stats.walletTotal - (stats.unused - stats.pendingHeld)) > 1;
-  const nav = ["Transactions", "Users", "Purchases", "SMSPool", "Settings", "Reports"];
 
   return (
-    <div className="adm">
-      <div className={`adm-scrim ${open ? "open" : ""}`} onClick={() => setOpen(false)} />
-      <aside className={`adm-side ${open ? "open" : ""}`}>
-        <div className="adm-logo">▲ Stacksnumbers</div>
-        <span className="adm-badge">Admin</span>
-        <button className="adm-nav on" onClick={() => setOpen(false)}>▦ Dashboard</button>
-        {nav.map((x) => (
-          <span key={x} className="adm-nav soon" title="Coming soon">• {x}</span>
-        ))}
-        <div className="adm-spacer" />
-        <button className="adm-nav" onClick={() => signOut(auth).then(() => router.replace("/auth"))}>⎋ Logout</button>
-      </aside>
-
-      <main className="adm-main">
+    <>
         <div className="adm-top">
           <div>
             <h1>Admin Dashboard</h1>
@@ -182,7 +158,6 @@ export default function AdminPage() {
               <option value="90">Last 90 Days</option>
               <option value="all">All time</option>
             </select>
-            <button className="adm-burger" onClick={() => setOpen(true)} aria-label="Open menu">☰</button>
           </div>
         </div>
 
@@ -270,7 +245,6 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
-      </main>
-    </div>
+    </>
   );
 }

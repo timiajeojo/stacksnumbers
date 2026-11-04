@@ -12,7 +12,7 @@ import "./admin.css";
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: "▦" },
   { href: "/admin/transactions", label: "Transactions", icon: "⇄" },
-  { href: "/admin/users", label: "Users", icon: "◔", soon: true },
+  { href: "/admin/users", label: "Users", icon: "◔" },
   { href: "/admin/purchases", label: "Purchases", icon: "🛒" },
   { href: "/admin/smspool", label: "SMSPool", icon: "◈", soon: true },
   { href: "/admin/settings", label: "Settings", icon: "⚙", soon: true },
@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <main className="adm-main">
         <div className="adm-mbar">
           <button className="adm-burger" onClick={() => setOpen(true)} aria-label="Open menu">☰</button>
-          <b>Stacksnumbers Admin</b>
+          <b>Admin</b>
         </div>
         {children}
       </main>
