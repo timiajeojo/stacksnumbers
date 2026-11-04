@@ -10,7 +10,17 @@ export const dynamic = "force-dynamic";
 const r2 = (n: number) => Math.round(n * 100) / 100;
 const ms = (v: any): number => (v?.toMillis ? v.toMillis() : typeof v === "number" ? v : 0);
 
-// GET /api/admin/smspool → live SMSPool balance + the top-ups you've logged
+// Reads a non-negative number from an env var, or null if it's missing/invalid
+const envNum = (v: string | undefined): number | null => {
+  if (v === undefined || v.trim() === "") return null;
+  const x = Number(v);
+  return Number.isFinite(x) && x >= 0 ? x : null;
+};
+
+// GET /api/admin/smspool → live SMSPool balance, deposit fee rate, and every top-up you've recorded
+//
+// SMSPool's public API only exposes the balance. It has no deposit-history or fee endpoint,
+// so funding totals and transactions come from the top-ups recorded in Firestore.
 export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -30,6 +40,15 @@ export async function GET(req: NextRequest) {
       // leave null → the page shows "Unavailable"
     }
 
+    // Deposit fee = amount × percent / 100 + flat (both in naira). Set these in Vercel:
+    //   SMSPOOL_DEPOSIT_FEE_PERCENT  e.g. 3.5
+    //   SMSPOOL_DEPOSIT_FEE_FLAT     e.g. 100   (optional)
+    // If neither is set, depositFee is null and the page lets you type the fee by hand.
+    const feePercent = envNum(process.env.SMSPOOL_DEPOSIT_FEE_PERCENT);
+    const feeFlat = envNum(process.env.SMSPOOL_DEPOSIT_FEE_FLAT);
+    const depositFee =
+      feePercent === null && feeFlat === null ? null : { percent: feePercent ?? 0, flat: feeFlat ?? 0 };
+
     const snap = await adminDb.collection("smspoolTopups").get();
     const all = snap.docs
       .map((d) => {
@@ -41,14 +60,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       balanceUsd,
       balanceNgn,
-      // Set SMSPOOL_DEPOSIT_URL in Vercel to the page you use to add funds
-      depositUrl: process.env.SMSPOOL_DEPOSIT_URL || "https://www.smspool.net/",
+      // The deposit page of the SMSPool account. Override with SMSPOOL_DEPOSIT_URL if needed.
+      depositUrl: process.env.SMSPOOL_DEPOSIT_URL || "https://www.smspool.net/balance/deposit",
+      depositFee,
       totals: {
         count: all.length,
         funded: r2(all.reduce((s, x) => s + x.amount, 0)),
         fees: r2(all.reduce((s, x) => s + x.fee, 0)),
       },
-      topups: all.slice(0, 30),
+      topups: all.slice(0, 200),
     });
   } catch (err) {
     console.error("Admin smspool error:", err);
