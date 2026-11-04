@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { auth } from "../../lib/firebase";
 
 type Topup = { id: string; t: number; amount: number; fee: number; note: string };
-type FeeRate = { percent: number; flat: number };
+type FeeRate = { percent: number; flat: number; freeAbove: number | null };
 type Data = {
   balanceUsd: number | null;
   balanceNgn: number | null;
@@ -24,7 +24,9 @@ const parse = (s: string) => {
   const v = Number(s.replace(/,/g, ""));
   return Number.isFinite(v) && v > 0 ? v : 0;
 };
-const calcFee = (amount: number, r: FeeRate) => Math.round((amount * r.percent / 100 + r.flat) * 100) / 100;
+// No fee at all when the deposit is above the free threshold
+const calcFee = (amount: number, r: FeeRate) =>
+  r.freeAbove !== null && amount > r.freeAbove ? 0 : Math.round(((amount * r.percent) / 100 + r.flat) * 100) / 100;
 
 async function token() {
   const u = auth.currentUser;
@@ -180,9 +182,11 @@ export default function SmspoolPage() {
         <div className="adm-sub" style={{ marginTop: 8 }}>
           {rate
             ? amountNum > 0
-              ? `Deposit fee: ${n(feeNum)} (${rate.percent}%${rate.flat ? ` + ${n(rate.flat)}` : ""})`
-              : `Fee rate: ${rate.percent}%${rate.flat ? ` + ${n(rate.flat)}` : ""}. Enter an amount to see the fee.`
-            : "No fee rate is set, so type the fee yourself. Set SMSPOOL_DEPOSIT_FEE_PERCENT on the server to get it calculated live."}
+              ? rate.freeAbove !== null && amountNum > rate.freeAbove
+                ? `No deposit fee: deposits above ${n(rate.freeAbove)} are free`
+                : `Deposit fee: ${n(feeNum)} (${rate.percent}%${rate.flat ? ` + ${n(rate.flat)}` : ""})`
+              : `Fee rate: ${rate.percent}%${rate.flat ? ` + ${n(rate.flat)}` : ""}${rate.freeAbove !== null ? `, free above ${n(rate.freeAbove)}` : ""}. Enter an amount to see the fee.`
+            : "No fee rate is set, so type the fee yourself. Set SMSPOOL_DEPOSIT_FEE_PERCENT and SMSPOOL_DEPOSIT_FEE_FLAT_USD on the server to get it calculated live."}
         </div>
 
         {pending && (

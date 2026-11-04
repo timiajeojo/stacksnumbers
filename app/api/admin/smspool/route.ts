@@ -40,14 +40,29 @@ export async function GET(req: NextRequest) {
       // leave null → the page shows "Unavailable"
     }
 
-    // Deposit fee = amount × percent / 100 + flat (both in naira). Set these in Vercel:
-    //   SMSPOOL_DEPOSIT_FEE_PERCENT  e.g. 3.5
-    //   SMSPOOL_DEPOSIT_FEE_FLAT     e.g. 100   (optional)
-    // If neither is set, depositFee is null and the page lets you type the fee by hand.
+    // Deposit fee = amount × percent / 100 + a flat fee in USD, converted to naira at your
+    // exchange rate (USD_TO_NGN_RATE). SMSPool charges no fee on deposits above a USD threshold.
+    // Set these in Vercel:
+    //   SMSPOOL_DEPOSIT_FEE_PERCENT         e.g. 3.25
+    //   SMSPOOL_DEPOSIT_FEE_FLAT_USD        e.g. 0.25
+    //   SMSPOOL_DEPOSIT_FEE_FREE_ABOVE_USD  e.g. 1000   (optional)
+    // If none are set, depositFee is null and the page lets you type the fee by hand.
     const feePercent = envNum(process.env.SMSPOOL_DEPOSIT_FEE_PERCENT);
-    const feeFlat = envNum(process.env.SMSPOOL_DEPOSIT_FEE_FLAT);
-    const depositFee =
-      feePercent === null && feeFlat === null ? null : { percent: feePercent ?? 0, flat: feeFlat ?? 0 };
+    const feeFlatUsd = envNum(process.env.SMSPOOL_DEPOSIT_FEE_FLAT_USD);
+    const freeAboveUsd = envNum(process.env.SMSPOOL_DEPOSIT_FEE_FREE_ABOVE_USD);
+    let depositFee: { percent: number; flat: number; freeAbove: number | null } | null = null;
+    if (feePercent !== null || feeFlatUsd !== null) {
+      try {
+        const rate = usdToNgnCost(1); // naira per $1: the same rate used everywhere else
+        depositFee = {
+          percent: feePercent ?? 0,
+          flat: r2((feeFlatUsd ?? 0) * rate),
+          freeAbove: freeAboveUsd === null ? null : r2(freeAboveUsd * rate),
+        };
+      } catch {
+        // exchange rate not set → the page falls back to typing the fee yourself
+      }
+    }
 
     const snap = await adminDb.collection("smspoolTopups").get();
     const all = snap.docs
