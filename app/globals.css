@@ -361,6 +361,7 @@ footer{border-top:1px solid var(--ink-3); padding:56px 0 32px;}
   position:fixed; top:0; left:0; bottom:0; width:78%; max-width:320px; background:var(--ink-2);
   border-right:1px solid var(--ink-3); z-index:100; transform:translateX(-100%);
   transition:transform .28s ease; display:flex; flex-direction:column; padding:22px 18px;
+  overflow-y:auto;
 }
 .drawer.open{transform:translateX(0);}
 .drawer-brand{display:flex; align-items:center; gap:10px; margin-bottom:30px;}
@@ -375,7 +376,7 @@ footer{border-top:1px solid var(--ink-3); padding:56px 0 32px;}
 .drawer-item.active{background:rgba(61,143,255,0.1); color:var(--blue); font-weight:500;}
 .drawer-item.active .dot{width:6px; height:6px; border-radius:50%; background:var(--blue);}
 .drawer-item:not(.active):hover{background:var(--ink-3); color:var(--paper);}
-.drawer-bottom{margin-top:auto; border-top:1px solid var(--ink-3); padding-top:16px;}
+.drawer-bottom{display:contents;}
 .drawer-user{display:flex; align-items:center; justify-content:space-between; padding:10px 12px;}
 .drawer-user .left{display:flex; align-items:center; gap:10px;}
 .avatar{width:32px; height:32px; border-radius:50%; background:var(--ink-4); display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:600; font-family:'Space Grotesk',sans-serif;}

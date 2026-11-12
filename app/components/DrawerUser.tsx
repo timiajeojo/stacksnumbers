@@ -1,11 +1,40 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { ChevronDown, Settings, LogOut } from "lucide-react";
+import { ChevronDown, Settings, LogOut, MessageSquare, Headphones, Users } from "lucide-react";
 import { auth, db } from "../lib/firebase";
+
+// ─────────────────────────────────────────────────────────────
+// PUT YOUR LINKS HERE. While a link is empty, its item shows
+// greyed out and does nothing.
+// ─────────────────────────────────────────────────────────────
+const BUY_LOGS_URL = ""; // Services → Buy logs
+const CUSTOMER_CARE_URL = ""; // Support → Customer care
+const COMMUNITY_URL = ""; // Support → Community
+
+function ExtraItem({ href, icon, label }: { href: string; icon: ReactNode; label: string }) {
+  const inner = (
+    <div className="left">
+      {icon}
+      {label}
+    </div>
+  );
+  if (!href) {
+    return (
+      <div className="drawer-item" style={{ opacity: 0.5, cursor: "not-allowed" }} title="Link coming soon">
+        {inner}
+      </div>
+    );
+  }
+  return (
+    <a className="drawer-item" href={href} target="_blank" rel="noopener noreferrer">
+      {inner}
+    </a>
+  );
+}
 
 export default function DrawerUser() {
   const router = useRouter();
@@ -52,7 +81,19 @@ export default function DrawerUser() {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <div className="drawer-user-wrap" ref={wrapRef}>
+    <>
+      <div className="drawer-label" style={{ marginTop: 18 }}>SERVICES</div>
+      <ExtraItem href={BUY_LOGS_URL} icon={<MessageSquare size={18} />} label="Buy logs" />
+
+      <div className="drawer-label" style={{ marginTop: 18 }}>SUPPORT</div>
+      <ExtraItem href={CUSTOMER_CARE_URL} icon={<Headphones size={18} />} label="Customer care" />
+      <ExtraItem href={COMMUNITY_URL} icon={<Users size={18} />} label="Community" />
+
+    <div
+      className="drawer-user-wrap"
+      ref={wrapRef}
+      style={{ marginTop: "auto", borderTop: "1px solid var(--ink-3)", paddingTop: 16 }}
+    >
       {open && (
         <div className="drawer-user-menu">
           <div className="dum-header">
@@ -87,5 +128,6 @@ export default function DrawerUser() {
         <ChevronDown size={16} color="var(--paper-dim)" />
       </div>
     </div>
+    </>
   );
 }
