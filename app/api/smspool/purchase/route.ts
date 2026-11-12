@@ -4,6 +4,7 @@ import { adminDb } from "../../../lib/firebaseAdmin";
 import { verifyRequestUser } from "../../../lib/verifyAuth";
 import { smspoolFetch } from "../../../lib/smspool";
 import { usdToNgn, usdToNgnCost } from "../../../lib/pricing";
+import { sendPurchaseAlert } from "../../../lib/purchaseAlert";
 
 // One-time verification number purchase (what the Buy Number page calls).
 // Body: { country: "<id>", service: "<id>" }
@@ -80,10 +81,12 @@ export async function POST(req: NextRequest) {
   }
 
   // 2. Take the money (balance check and deduction in one transaction)
+  let previousBalance = 0; // wallet balance just before this purchase (for the admin email)
   try {
     await adminDb.runTransaction(async (t) => {
       const snap = await t.get(userRef);
       const balance = snap.exists ? Number(snap.data()?.walletBalance || 0) : 0;
+      previousBalance = balance;
       if (balance < costNaira) {
         throw Object.assign(new Error("Insufficient wallet balance"), {
           code: "INSUFFICIENT",
@@ -160,12 +163,23 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 4. Save the order so it shows up on the Verifications page
   const orderId = String(order.order_id);
   const expiresIn = Number(order.expires_in);
   const expiresAt =
     Date.now() + (Number.isFinite(expiresIn) && expiresIn > 0 ? expiresIn : 600) * 1000;
   const serviceName = String(order.service || "Service");
+
+  // Email the admin about the sale. Never throws, so it can't break the purchase.
+  await sendPurchaseAlert({
+    uid,
+    product: `${serviceName} Number`,
+    country: String(order.country || ""),
+    purchaseAmount: costNaira,
+    smspoolCost: smspoolCostNgn,
+    previousBalance,
+  });
+
+  // 4. Save the order so it shows up on the Verifications page
 
   try {
     const batch = adminDb.batch();
