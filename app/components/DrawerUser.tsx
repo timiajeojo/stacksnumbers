@@ -11,9 +11,9 @@ import { auth, db } from "../lib/firebase";
 // PUT YOUR LINKS HERE. While a link is empty, its item shows
 // greyed out and does nothing.
 // ─────────────────────────────────────────────────────────────
-const BUY_LOGS_URL = ""; // Services → Buy logs
-const CUSTOMER_CARE_URL = ""; // Support → Customer care
-const COMMUNITY_URL = ""; // Support → Community
+const BUY_LOGS_URL = "https://stackslogs.vercel.app/"; // Services → Buy logs
+const CUSTOMER_CARE_URL = "https://wa.me/2349152308359"; // Support → Customer care
+const COMMUNITY_URL = "https://chat.whatsapp.com/E9SIS7FjeGA8C2u2f2kbcE?s=cl&p=a&mlu=4"; // Support → Community
 
 function ExtraItem({ href, icon, label }: { href: string; icon: ReactNode; label: string }) {
   const inner = (
