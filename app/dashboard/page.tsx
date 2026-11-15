@@ -23,7 +23,7 @@ import { auth, db } from "../lib/firebase";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid, active: true },
-  { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
+  { label: "Deposits", href: "#", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
   { label: "Rentals", href: "#", icon: Package },
 ];
@@ -131,7 +131,7 @@ export default function DashboardPage() {
             <div className="wallet-amount mono">
               {balance === null ? "—" : formatNaira(balance)}
             </div>
-            <a href="/dashboard/deposits" className="topup-btn">
+            <a href="#" className="topup-btn">
               Top Up
             </a>
           </div>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
               </div>
               <span className="label">My Numbers</span>
             </a>
-            <a href="/dashboard/deposits" className="qa-card qa-wallet">
+            <a href="#" className="qa-card qa-wallet">
               <div className="qa-icon">
                 <Wallet size={16} />
               </div>
