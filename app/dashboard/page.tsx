@@ -23,7 +23,7 @@ import { auth, db } from "../lib/firebase";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid, active: true },
-  { label: "Deposits", href: "#", icon: ArrowDownToLine },
+  { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
   { label: "Rentals", href: "#", icon: Package },
 ];
@@ -34,7 +34,7 @@ function formatNaira(amount: number): string {
     currency: "NGN",
     minimumFractionDigits: 2,
   }).format(amount);
-}
+}1
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -131,7 +131,7 @@ export default function DashboardPage() {
             <div className="wallet-amount mono">
               {balance === null ? "—" : formatNaira(balance)}
             </div>
-            <a href="#" className="topup-btn">
+            <a href="/dashboard/deposits" className="topup-btn">
               Top Up
             </a>
           </div>
