@@ -31,7 +31,7 @@ import DrawerUser from "../../components/DrawerUser";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
-  { label: "Deposits", href: "#", icon: ArrowDownToLine },
+  { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2, active: true },
   { label: "Rentals", href: "#", icon: Package },
 ];

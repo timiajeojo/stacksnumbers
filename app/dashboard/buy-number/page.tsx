@@ -22,7 +22,7 @@ import { isBlockedService } from "../../lib/blockedServices";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutGrid },
-  { label: "Deposits", href: "#", icon: ArrowDownToLine },
+  { label: "Deposits", href: "/dashboard/deposits", icon: ArrowDownToLine },
   { label: "Verifications", href: "/dashboard/verifications", icon: CheckCircle2 },
   { label: "Rentals", href: "#", icon: Package },
 ];
