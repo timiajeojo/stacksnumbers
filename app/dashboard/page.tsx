@@ -153,7 +153,7 @@ export default function DashboardPage() {
               </div>
               <span className="label">My Numbers</span>
             </a>
-            <a href="#" className="qa-card qa-wallet">
+            <a href="/dashboard/deposits" className="qa-card qa-wallet">
               <div className="qa-icon">
                 <Wallet size={16} />
               </div>
