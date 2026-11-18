@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "../../../../lib/firebaseAdmin";
 import { verifyRequestUser } from "../../../../lib/verifyAuth";
 import { smspoolFetch } from "../../../../lib/smspool";
-import { usdToNgn } from "../../../../lib/pricing";
+import { usdToNgn, usdToNgnCost } from "../../../../lib/pricing";
+import { sendPurchaseAlert } from "../../../../lib/purchaseAlert";
 import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(req: NextRequest) {
@@ -94,6 +95,22 @@ export async function POST(req: NextRequest) {
         status: "pending", // takes up to 24-48h to activate per SMSPool
         purchasedAt: FieldValue.serverTimestamp(),
       });
+    });
+
+    // Email the admin about the sale. Never throws, so it can't break the purchase.
+    let smspoolCost = 0;
+    try {
+      smspoolCost = Math.ceil(usdToNgnCost(Number(usdPrice)));
+    } catch {
+      // USD_TO_NGN_RATE missing: still send the alert, just without a cost figure
+    }
+    await sendPurchaseAlert({
+      uid,
+      product: `Long-term Rental (${order.days || days} days)`,
+      country: String(countryName || ""),
+      purchaseAmount: costNaira,
+      smspoolCost,
+      previousBalance: walletBalance,
     });
 
     return NextResponse.json({ success: true, rentalCode });
